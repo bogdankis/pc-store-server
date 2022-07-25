@@ -33,15 +33,16 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry corsRegistry) {
 
         HttpMethod[] theUnsupportedActions = {HttpMethod.PUT,
-                                              HttpMethod.POST,
-                                              HttpMethod.DELETE,
-                                              HttpMethod.PATCH};
+                HttpMethod.POST,
+                HttpMethod.DELETE,
+                HttpMethod.PATCH};
 
         //TODO disable HTTP methods for ProductCategory: PUT, POST and DELETE
         disableHttpMethods(Product.class, config, theUnsupportedActions);
         disableHttpMethods(ProductCategory.class, config, theUnsupportedActions);
         disableHttpMethods(Country.class, config, theUnsupportedActions);
         disableHttpMethods(State.class, config, theUnsupportedActions);
+        disableHttpMethods(Order.class, config, theUnsupportedActions);
 
 
         //TODO call an internal helper method
@@ -63,18 +64,18 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         //TODO expose entity ids
 
 
-       //TODO get a list of all entity classes from the entity manager
+        //TODO get a list of all entity classes from the entity manager
         Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
 
-       //TODO create an array of the entity types
+        //TODO create an array of the entity types
         List<Class> entityClasses = new ArrayList<>();
 
-       //TODO get the entity types for the entities
+        //TODO get the entity types for the entities
         for (EntityType tempEntityType : entities) {
             entityClasses.add(tempEntityType.getJavaType());
         }
 
-       //TODO expose the entity ids for the array of entity/domain types
+        //TODO expose the entity ids for the array of entity/domain types
         Class[] domainTypes = entityClasses.toArray(new Class[0]);
         config.exposeIdsFor(domainTypes);
     }
