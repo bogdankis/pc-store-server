@@ -8,7 +8,7 @@ USE `pcstore-ecommerce`;
 -- Preparing tables
 
 SET FOREIGN_KEY_CHECKS=0;
-DROP TABLE IF EXISTS `order_item`;
+DROP TABLE IF EXISTS `order_items`;
 DROP TABLE IF EXISTS `orders`;
 DROP TABLE IF EXISTS `customer`;
 DROP TABLE IF EXISTS `address`;
@@ -64,7 +64,7 @@ CREATE TABLE `orders` (
 --
 -- Table structure for table `order_items`
 --
-CREATE TABLE `order_item` (
+CREATE TABLE `order_items` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `image_url` varchar(255) DEFAULT NULL,
   `unit_price` decimal(19,2) DEFAULT NULL,
