@@ -1,16 +1,20 @@
 package com.pcstore.ecommerce.service;
 
+import com.pcstore.ecommerce.dto.PaymentInfo;
 import com.pcstore.ecommerce.dto.Purchase;
 import com.pcstore.ecommerce.dto.PurchaseResponse;
 import com.pcstore.ecommerce.model.Customer;
 import com.pcstore.ecommerce.model.Order;
 import com.pcstore.ecommerce.model.OrderItem;
 import com.pcstore.ecommerce.repository.CustomerRepository;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
@@ -18,8 +22,10 @@ public class CheckoutServiceImpl implements CheckoutService {
     private CustomerRepository customerRepository;
 
 
-    public CheckoutServiceImpl(CustomerRepository customerRepository) {
+    public CheckoutServiceImpl(CustomerRepository customerRepository,
+                               @Value("${stripe.key.secret}") String secretKey) {
         this.customerRepository = customerRepository;
+        Stripe.apiKey = secretKey;
     }
 
     @Override
@@ -56,6 +62,18 @@ public class CheckoutServiceImpl implements CheckoutService {
         customerRepository.save(customer);
         //TODO return a response
         return new PurchaseResponse(orderTrackingNumber);
+    }
+
+    @Override
+    public PaymentIntent createPaymentIntent(PaymentInfo paymentInfo) throws StripeException {
+        List<String> paymentMethodTypes = new ArrayList<>();
+        paymentMethodTypes.add("card");
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("amount",paymentInfo.getAmount());
+        params.put("currenncy",paymentMethodTypes);
+
+        return PaymentIntent.create(params); //comunicates with back-end stripes.com
     }
 
     private String generateOrderTrackingNumber() {

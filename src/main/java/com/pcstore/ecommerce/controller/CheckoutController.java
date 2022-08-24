@@ -1,8 +1,13 @@
 package com.pcstore.ecommerce.controller;
 
+import com.pcstore.ecommerce.dto.PaymentInfo;
 import com.pcstore.ecommerce.dto.Purchase;
 import com.pcstore.ecommerce.dto.PurchaseResponse;
 import com.pcstore.ecommerce.service.CheckoutService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +26,15 @@ public class CheckoutController {
         PurchaseResponse purchaseResponse = checkoutService.placeOrder(purchase);
 
         return purchaseResponse;
+    }
+    @PostMapping("/payment-intent")
+    public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfo paymentInfo)throws StripeException {
+
+        PaymentIntent paymentIntent = checkoutService.createPaymentIntent(paymentInfo);
+
+        String paymentStr = paymentIntent.toJson(); //converts payment to string
+
+        return new ResponseEntity<>(paymentStr, HttpStatus.OK);
     }
 
 }
