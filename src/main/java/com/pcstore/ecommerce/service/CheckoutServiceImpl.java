@@ -44,7 +44,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         orderItems.forEach(item -> order.add(item));
 
         //TODO populate order with billingAddress and shippingAddress
-        order.setBillingAddress((purchase.getBillingAddress()));
+        order.setBillingAddress(purchase.getBillingAddress());
         order.setShippingAddress(purchase.getShippingAddress());
 
         //TODO populate customer with order
@@ -69,9 +69,10 @@ public class CheckoutServiceImpl implements CheckoutService {
         List<String> paymentMethodTypes = new ArrayList<>();
         paymentMethodTypes.add("card");
 
-        Map<String,Object> params = new HashMap<>();
-        params.put("amount",paymentInfo.getAmount());
-        params.put("currenncy",paymentMethodTypes);
+        Map<String, Object> params = new HashMap<>();
+        params.put("amount", paymentInfo.getAmount());
+        params.put("currency", paymentInfo.getCurrency());
+        params.put("payment_method_types",paymentMethodTypes);
 
         return PaymentIntent.create(params); //comunicates with back-end stripes.com
     }
