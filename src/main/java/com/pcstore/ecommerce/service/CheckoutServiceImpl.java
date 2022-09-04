@@ -73,6 +73,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         params.put("amount", paymentInfo.getAmount());
         params.put("currency", paymentInfo.getCurrency());
         params.put("payment_method_types",paymentMethodTypes);
+        params.put("description","Pcstore purchase");
 
         return PaymentIntent.create(params); //comunicates with back-end stripes.com
     }
